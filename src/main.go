@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"image/color"
 	"log"
 
@@ -8,6 +9,10 @@ import (
 )
 
 func main() {
+	brightness := flag.Int("b", 100, "brightness")
+	mode := flag.Int("m", 1, "mode")
+	flag.Parse()
+
 	ctx := gousb.NewContext()
 	defer ctx.Close()
 
@@ -39,11 +44,11 @@ func main() {
 		log.Fatalf("%s.OutEndpoint(%d): %v", intf, keyboard.OutEndpoint, err)
 	}
 
-	data, err := newPayload(50, color.RGBA{
+	data, err := newPayload(*brightness, color.RGBA{
 		R: 255,
 		G: 255,
 		B: 255,
-	}, SOLID_MODE, false)
+	}, Mode(*mode), false)
 	if err != nil {
 		log.Fatal(err)
 	}
